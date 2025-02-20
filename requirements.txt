@@ -1,1 +1,6 @@
 django
+djangorestframework
+djangorestframework-simplejwt  # JWT Authentication for DRF
+markdown  # For browsable API support
+django-filter  # For filtering support
+django-cors-headers  # Enable CORS support
