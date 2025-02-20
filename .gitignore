@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env
+*.env
+
+# Django specific
+db.sqlite3
+/media/
+staticfiles/
+
+# Ignore migrations (optional)
+**/migrations/**
+
+# Logs
+logs/
+*.log
+
+# Docker
+docker-compose.override.yml
+*.pid
+
+# VSCode / JetBrains
+.vscode/
+.idea/
+
+# Python cache
+*.pyc
+*.pyo
+*.pyd
+
+# Coverage
+.coverage
+htmlcov/
