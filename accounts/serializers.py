@@ -1,8 +1,19 @@
-from rest_framework import serializers
-from accounts.models import User
+import logging
 from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, smart_str
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.mail import send_mail
+from rest_framework import serializers
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from accounts.renderers import UserRenderer
 
 User = get_user_model()
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -59,3 +70,56 @@ class UserChangePasswordSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
+
+# 🔹 Send Password Reset Email
+class SendPasswordResetEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=255)
+
+    class Meta:
+        fields = ["email"]
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({"email": "User not found with this email"})
+
+        user = User.objects.get(email=email)
+        uid = urlsafe_base64_encode(force_bytes(user.id))  # ✅ Fixed
+        token = PasswordResetTokenGenerator().make_token(user)
+        reset_link = f"https://localhost:3000/api/user/reset/{uid}/{token}"  
+
+        logger.info(f"Encoded UID: {uid}")
+        logger.info(f"Password Reset Token: {token}")
+        logger.info(f"Password Reset Link: {reset_link}")
+
+        return {"email": email, "reset_link": reset_link}
+
+
+# 🔹 Reset Password
+class UserPasswordResetSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=255, style={'input_type': 'password'}, write_only=True)
+    password2 = serializers.CharField(max_length=255, style={'input_type': 'password'}, write_only=True)
+
+    def validate(self, attrs):
+        password = attrs.get("password")
+        password2 = attrs.get("password2")
+        uid = self.context.get("uid")
+        token = self.context.get("token")
+
+        if password != password2:
+            raise serializers.ValidationError({"password2": "Passwords must match"})
+
+        try:
+            user_id = int(smart_str(urlsafe_base64_decode(uid)))  
+            user = User.objects.filter(id=user_id).first()  
+            
+            if user is None or not PasswordResetTokenGenerator().check_token(user, token):
+                raise serializers.ValidationError({"token": "Token is invalid or expired"})
+
+            user.set_password(password)
+            user.save()
+            return attrs
+
+        except Exception:
+            raise serializers.ValidationError({"token": "Token is invalid or expired"})
