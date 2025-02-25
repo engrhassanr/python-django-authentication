@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,14 +19,13 @@ const Login = () => {
     e.preventDefault();
     setMessage("");
     setError("");
+    setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/user/login/", {
+      const response = await fetch(`${API_URL}/api/user/login/`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
       const data = await response.json();
@@ -35,15 +33,18 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem("access_token", data.token.access);
         localStorage.setItem("refresh_token", data.token.refresh);
-        setMessage("Login successful! Redirecting...");
+        localStorage.setItem("user", JSON.stringify(data.user));
 
+        setMessage("Login successful! Redirecting...");
         setTimeout(() => navigate("/dashboard"), 2000);
       } else {
-        setError(data.errors || "Invalid credentials");
+        setError(data.error || "Invalid credentials");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Login Error:", error);
       setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,8 +91,12 @@ const Login = () => {
                 <Link to="/forgot-password">Forgot Password?</Link>
               </p>
             </div>
-            <button type="submit" className="btn btn-success w-100 mt-3">
-              Login
+            <button
+              type="submit"
+              className="btn btn-success w-100 mt-3"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
             </button>
             {message && <p className="text-success mt-3">{message}</p>}
             {error && <p className="text-danger mt-3">{error}</p>}

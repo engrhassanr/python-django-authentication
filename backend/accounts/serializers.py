@@ -64,7 +64,6 @@ class UserChangePasswordSerializer(serializers.ModelSerializer):
 
         if password != password2:
             raise serializers.ValidationError({"password2": "Passwords must match"})
-
         return attrs
 
     def update(self, instance, validated_data):
@@ -87,9 +86,9 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             raise serializers.ValidationError({"email": "User not found with this email"})
 
         user = User.objects.get(email=email)
-        uid = urlsafe_base64_encode(force_bytes(str(user.pk)))  # ✅ Encode UID safely
+        uid = urlsafe_base64_encode(force_bytes(str(user.pk))) 
         token = PasswordResetTokenGenerator().make_token(user)
-        reset_link = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}"  # ✅ Use settings for frontend URL
+        reset_link = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}"
 
         # Send email
         subject = "Password Reset Request"
@@ -115,7 +114,7 @@ class UserPasswordResetSerializer(serializers.Serializer):
             raise serializers.ValidationError({"password2": "Passwords must match"})
 
         try:
-            user_id = smart_str(urlsafe_base64_decode(uid))  # ✅ Safer decoding
+            user_id = smart_str(urlsafe_base64_decode(uid)) 
             user = User.objects.filter(id=user_id).first()
 
             if user is None or not PasswordResetTokenGenerator().check_token(user, token):
