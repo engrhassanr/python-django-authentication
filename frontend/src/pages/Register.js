@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { registerUser } from "../services/auth";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../services/auth"; // Adjust according to your file structure
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -53,48 +53,88 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password2"
-          placeholder="Confirm Password"
-          onChange={handleChange}
-          required
-        />
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
+    >
+      <div
+        className="form-container bg-white p-4 rounded shadow"
+        style={{ width: "100%", maxWidth: "600px" }}
+      >
+        <h4 className="text-center mb-4">Register</h4>
+        <form onSubmit={handleSubmit}>
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="name">Full Name</label>
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              type="email"
+              className="form-control"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="email">Email</label>
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              type="password"
+              className="form-control"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="password">Password</label>
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              type="password"
+              className="form-control"
+              name="password2"
+              placeholder="Confirm Password"
+              value={formData.password2}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="password2">Confirm Password</label>
+          </div>
 
-        <label>
-          <input type="checkbox" name="tc" onChange={handleChange} required /> I
-          agree to the Terms & Conditions
-        </label>
+          <div className="form-check mb-3">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="tc"
+              name="tc"
+              checked={formData.tc}
+              onChange={handleChange}
+              required
+            />
+            <label className="form-check-label" htmlFor="tc">
+              I agree to the Terms and Conditions
+            </label>
+          </div>
 
-        <button type="submit">Register</button>
-      </form>
+          <button type="submit" className="btn btn-success w-100 mt-3">
+            Register
+          </button>
 
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+          {message && <p className="text-success mt-3">{message}</p>}
+          {error && <p className="text-danger mt-3">{error}</p>}
+        </form>
+      </div>
     </div>
   );
 };

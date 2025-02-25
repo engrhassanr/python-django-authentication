@@ -53,20 +53,43 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h2>Dashboard</h2>
-      {user ? (
-        <div>
-          <p>
-            <strong>Username:</strong> {user.name}
-          </p>
-          <p>
-            <strong>Email:</strong> {user.email}
-          </p>
-          <button onClick={handleLogout}>Logout</button>
+      {/* Navbar */}
+      <nav className="navbar navbar-dark bg-dark">
+        <div className="container">
+          <a href="/dashboard" className="navbar-brand">
+            Dashboard
+          </a>
+          <div className="d-flex align-items-center">
+            {user ? (
+              <>
+                <span className="me-3 text-white">Hello, {user.name}</span>
+                <button className="btn btn-danger" onClick={handleLogout}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <span>Loading...</span>
+            )}
+          </div>
         </div>
-      ) : (
-        <p>Loading user data...</p>
-      )}
+      </nav>
+
+      {/* Dashboard Content */}
+      <div className="container mt-4">
+        {user ? (
+          <div>
+            <h2>Welcome to the Dashboard</h2>
+            <p>
+              <strong>Username:</strong> {user.name}
+            </p>
+            <p>
+              <strong>Email:</strong> {user.email}
+            </p>
+          </div>
+        ) : (
+          <p>Loading user data...</p>
+        )}
+      </div>
     </div>
   );
 };

@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from accounts.renderers import UserRenderer
+from django.core.mail import send_mail
+from django.conf import settings
 
 User = get_user_model()
 
@@ -85,15 +87,17 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             raise serializers.ValidationError({"email": "User not found with this email"})
 
         user = User.objects.get(email=email)
-        uid = urlsafe_base64_encode(force_bytes(user.id))  # ✅ Fixed
+        uid = urlsafe_base64_encode(force_bytes(str(user.pk)))  # ✅ Encode UID safely
         token = PasswordResetTokenGenerator().make_token(user)
-        reset_link = f"https://localhost:3000/api/user/reset/{uid}/{token}"  
+        reset_link = f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}"  # ✅ Use settings for frontend URL
 
-        logger.info(f"Encoded UID: {uid}")
-        logger.info(f"Password Reset Token: {token}")
-        logger.info(f"Password Reset Link: {reset_link}")
+        # Send email
+        subject = "Password Reset Request"
+        message = f"Click the link below to reset your password:\n{reset_link}"
+        send_mail(subject, message, settings.EMAIL_HOST_USER, [email])
 
         return {"email": email, "reset_link": reset_link}
+
 
 
 # 🔹 Reset Password
@@ -111,9 +115,9 @@ class UserPasswordResetSerializer(serializers.Serializer):
             raise serializers.ValidationError({"password2": "Passwords must match"})
 
         try:
-            user_id = int(smart_str(urlsafe_base64_decode(uid)))  
-            user = User.objects.filter(id=user_id).first()  
-            
+            user_id = smart_str(urlsafe_base64_decode(uid))  # ✅ Safer decoding
+            user = User.objects.filter(id=user_id).first()
+
             if user is None or not PasswordResetTokenGenerator().check_token(user, token):
                 raise serializers.ValidationError({"token": "Token is invalid or expired"})
 
@@ -122,4 +126,4 @@ class UserPasswordResetSerializer(serializers.Serializer):
             return attrs
 
         except Exception:
-            raise serializers.ValidationError({"token": "Token is invalid or expired"})
+            raise serializers.ValidationError({"token": "Invalid UID"})

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -47,30 +48,56 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
-
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="form-body">
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
+      >
+        <div
+          className="form-container bg-white p-4 rounded shadow"
+          style={{ width: "100%", maxWidth: "400px" }}
+        >
+          <h4 className="text-center mb-4">Login</h4>
+          <form onSubmit={handleLogin}>
+            <div className="form-floating mb-3">
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              <label htmlFor="email">Email</label>
+            </div>
+            <div className="form-floating mb-3">
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <label htmlFor="password">Password</label>
+            </div>
+            <div className="text-left mt-3">
+              <p className="text-center mt-2">
+                <Link to="/forgot-password">Forgot Password?</Link>
+              </p>
+            </div>
+            <button type="submit" className="btn btn-success w-100 mt-3">
+              Login
+            </button>
+            {message && <p className="text-success mt-3">{message}</p>}
+            {error && <p className="text-danger mt-3">{error}</p>}
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
