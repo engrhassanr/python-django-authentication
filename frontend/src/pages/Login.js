@@ -56,7 +56,7 @@ const Login = () => {
       >
         <div
           className="form-container bg-white p-4 rounded shadow"
-          style={{ width: "100%", maxWidth: "400px" }}
+          style={{ width: "100%", maxWidth: "500px" }}
         >
           <h4 className="text-center mb-4">Login</h4>
           <form onSubmit={handleLogin}>
@@ -87,17 +87,24 @@ const Login = () => {
               <label htmlFor="password">Password</label>
             </div>
             <div className="text-left mt-3">
-              <p className="text-center mt-2">
+              <p className="mt-2">
                 <Link to="/forgot-password">Forgot Password?</Link>
               </p>
             </div>
             <button
               type="submit"
-              className="btn btn-success w-100 mt-3"
+              className="btn btn-success w-100"
               disabled={loading}
             >
               {loading ? "Logging in..." : "Login"}
             </button>
+            <Link
+              to="/register"
+              className="btn btn-primary w-100 mt-3 text-white text-center"
+            >
+              Register
+            </Link>
+
             {message && <p className="text-success mt-3">{message}</p>}
             {error && <p className="text-danger mt-3">{error}</p>}
           </form>

@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ProfilePage from "./pages/Profile";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );

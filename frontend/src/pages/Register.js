@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../services/auth"; // Adjust according to your file structure
+import { registerUser } from "../services/auth"; // Ensure correct import
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +12,7 @@ const Register = () => {
   });
 
   const [message, setMessage] = useState("");
-  const [error, setError] = useState(""); // For showing errors
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -28,6 +28,7 @@ const Register = () => {
     setMessage("");
     setError("");
 
+    // Client-side validation
     if (formData.password !== formData.password2) {
       setError("Passwords do not match!");
       return;
@@ -41,11 +42,13 @@ const Register = () => {
     try {
       const response = await registerUser(formData);
 
-      if (response.token) {
+      if (response.ok) {
+        const data = await response.json();
         setMessage("Registration successful! Redirecting...");
         setTimeout(() => navigate("/login"), 2000);
       } else {
-        setError(response.errors || "Registration failed");
+        const errorData = await response.json();
+        setError(errorData.error || "Registration failed. Please try again.");
       }
     } catch (err) {
       setError("Something went wrong. Please try again.");
@@ -59,7 +62,7 @@ const Register = () => {
     >
       <div
         className="form-container bg-white p-4 rounded shadow"
-        style={{ width: "100%", maxWidth: "600px" }}
+        style={{ width: "100%", maxWidth: "500px" }}
       >
         <h4 className="text-center mb-4">Register</h4>
         <form onSubmit={handleSubmit}>

@@ -1,31 +1,42 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { resetPassword } from "../services/auth"; // API call function
+import { resetPassword } from "../services/auth";
 
 const ResetPassword = () => {
-  const { uid, token } = useParams(); // ✅ Extract UID and Token from URL
+  const { uid, token } = useParams();
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
+    setLoading(true);
 
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      setLoading(false);
       return;
     }
 
     try {
       const response = await resetPassword(uid, token, password);
       setMessage(response.msg || "Password reset successfully.");
-      setTimeout(() => navigate("/login"), 2000); // ✅ Redirect to login after success
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,7 +48,7 @@ const ResetPassword = () => {
       >
         <div
           className="form-container bg-white p-4 rounded shadow"
-          style={{ width: "100%", maxWidth: "400px" }}
+          style={{ width: "100%", maxWidth: "500px" }}
         >
           <h4 className="text-center mb-4">Reset Password</h4>
           <form onSubmit={handleSubmit}>
@@ -65,8 +76,12 @@ const ResetPassword = () => {
               />
               <label htmlFor="confirmPassword">Confirm Password</label>
             </div>
-            <button type="submit" className="btn btn-success w-100 mt-3">
-              Reset Password
+            <button
+              type="submit"
+              className="btn btn-success w-100 mt-3"
+              disabled={loading}
+            >
+              {loading ? "Resetting..." : "Reset Password"}
             </button>
             {message && <p className="text-success mt-3">{message}</p>}
             {error && <p className="text-danger mt-3">{error}</p>}

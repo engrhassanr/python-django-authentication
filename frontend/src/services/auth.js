@@ -85,3 +85,24 @@ export const resetPassword = async (uid, token, newPassword) => {
     return { error: "Something went wrong. Please try again." };
   }
 };
+
+export const getUserProfile = async (token) => {
+  try {
+    const response = await fetch(`${API_URL}/api/user/profile/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.error || "Failed to fetch profile.");
+    }
+    return data;
+  } catch (error) {
+    console.error("Profile Fetch Error:", error);
+    return { error: "Something went wrong. Please try again." };
+  }
+};
