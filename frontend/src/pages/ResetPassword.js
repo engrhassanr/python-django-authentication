@@ -41,52 +41,62 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="form-body">
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
-      >
-        <div
-          className="form-container bg-white p-4 rounded shadow"
-          style={{ width: "100%", maxWidth: "500px" }}
-        >
-          <h4 className="text-center mb-4">Reset Password</h4>
-          <form onSubmit={handleSubmit}>
-            <div className="form-floating mb-3">
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                placeholder="New Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <label htmlFor="password">New Password</label>
-            </div>
-            <div className="form-floating mb-3">
-              <input
-                type="password"
-                className="form-control"
-                id="confirmPassword"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-              <label htmlFor="confirmPassword">Confirm Password</label>
-            </div>
-            <button
-              type="submit"
-              className="btn btn-success w-100 mt-3"
-              disabled={loading}
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
+          Reset Password
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
             >
-              {loading ? "Resetting..." : "Reset Password"}
-            </button>
-            {message && <p className="text-success mt-3">{message}</p>}
-            {error && <p className="text-danger mt-3">{error}</p>}
-          </form>
-        </div>
+              New Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
+              placeholder="Enter new password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-lg transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            disabled={loading}
+          >
+            {loading ? "Resetting..." : "Reset Password"}
+          </button>
+          {message && (
+            <p className="text-green-600 text-center font-medium mt-3">
+              {message}
+            </p>
+          )}
+          {error && (
+            <p className="text-red-600 text-center font-medium mt-3">{error}</p>
+          )}
+        </form>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Button, TextInput, Card } from "flowbite-react";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
@@ -49,67 +50,58 @@ const Login = () => {
   };
 
   return (
-    <div className="form-body">
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
-      >
-        <div
-          className="form-container bg-white p-4 rounded shadow"
-          style={{ width: "100%", maxWidth: "500px" }}
-        >
-          <h4 className="text-center mb-4">Login</h4>
-          <form onSubmit={handleLogin}>
-            <div className="form-floating mb-3">
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="email">Email</label>
-            </div>
-            <div className="form-floating mb-3">
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="password">Password</label>
-            </div>
-            <div className="text-left mt-3">
-              <p className="mt-2">
-                <Link to="/forgot-password">Forgot Password?</Link>
-              </p>
-            </div>
-            <button
-              type="submit"
-              className="btn btn-success w-100"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </button>
-            <Link
-              to="/register"
-              className="btn btn-primary w-100 mt-3 text-white text-center"
-            >
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <Card className="max-w-md w-full p-6 bg-white shadow-lg border border-gray-200">
+        <h4 className="text-center text-xl font-semibold mb-4 text-gray-800">
+          Login
+        </h4>
+        <form onSubmit={handleLogin} className="space-y-3">
+          <TextInput
+            type="email"
+            placeholder="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
+            required
+          />
+          <TextInput
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
+            required
+          />
+          <div className="text-left">
+            <p className="text-sm">
+              <Link
+                to="/forgot-password"
+                className="hover:underline text-blue-600"
+              >
+                Forgot Password?
+              </Link>
+            </p>
+          </div>
+          <Button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </Button>
+          <Link to="/register">
+            <Button className="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-gray-800">
               Register
-            </Link>
-
-            {message && <p className="text-success mt-3">{message}</p>}
-            {error && <p className="text-danger mt-3">{error}</p>}
-          </form>
-        </div>
-      </div>
+            </Button>
+          </Link>
+          {message && (
+            <p className="text-green-600 text-center mt-3">{message}</p>
+          )}
+          {error && <p className="text-red-600 text-center mt-3">{error}</p>}
+        </form>
+      </Card>
     </div>
   );
 };

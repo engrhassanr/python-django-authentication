@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../services/auth"; // Ensure correct import
+import { registerUser } from "../services/auth";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +28,6 @@ const Register = () => {
     setMessage("");
     setError("");
 
-    // Client-side validation
     if (formData.password !== formData.password2) {
       setError("Passwords do not match!");
       return;
@@ -43,7 +42,6 @@ const Register = () => {
       const response = await registerUser(formData);
 
       if (response.ok) {
-        const data = await response.json();
         setMessage("Registration successful! Redirecting...");
         setTimeout(() => navigate("/login"), 2000);
       } else {
@@ -56,86 +54,67 @@ const Register = () => {
   };
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ height: "100vh", backgroundColor: "#f8f9fa" }}
-    >
-      <div
-        className="form-container bg-white p-4 rounded shadow"
-        style={{ width: "100%", maxWidth: "500px" }}
-      >
-        <h4 className="text-center mb-4">Register</h4>
-        <form onSubmit={handleSubmit}>
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              className="form-control"
-              name="name"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="name">Full Name</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              type="email"
-              className="form-control"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="email">Email</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              type="password"
-              className="form-control"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="password">Password</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              type="password"
-              className="form-control"
-              name="password2"
-              placeholder="Confirm Password"
-              value={formData.password2}
-              onChange={handleChange}
-              required
-            />
-            <label htmlFor="password2">Confirm Password</label>
-          </div>
-
-          <div className="form-check mb-3">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+        <h4 className="text-center text-2xl font-semibold mb-4">Register</h4>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="password"
+            name="password2"
+            placeholder="Confirm Password"
+            value={formData.password2}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div className="flex items-center">
             <input
               type="checkbox"
-              className="form-check-input"
-              id="tc"
               name="tc"
               checked={formData.tc}
               onChange={handleChange}
               required
+              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
-            <label className="form-check-label" htmlFor="tc">
+            <label className="ml-2 text-sm text-gray-700">
               I agree to the Terms and Conditions
             </label>
           </div>
-
-          <button type="submit" className="btn btn-success w-100 mt-3">
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+          >
             Register
           </button>
-
-          {message && <p className="text-success mt-3">{message}</p>}
-          {error && <p className="text-danger mt-3">{error}</p>}
+          {message && <p className="text-green-500 text-sm mt-2">{message}</p>}
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
       </div>
     </div>
