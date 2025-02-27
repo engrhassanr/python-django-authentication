@@ -49,9 +49,9 @@ docker-compose run web python manage.py startapp accounts
 docker-compose run web python manage.py createsuperuser
 
 
-docker-compose down  # Stop and remove old containers
-docker-compose build  # Rebuild the image
-docker-compose up -d  # Run in detached mode
+**run the code inside docker**
+docker-compose down -v
+docker-compose up --build
 
 
 docker-compose run web python manage.py migrate
